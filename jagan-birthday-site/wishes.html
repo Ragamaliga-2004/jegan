@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Wishes • Jagan</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .page-hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:7rem 1.5rem 4rem;
+    position:relative;
+  }
+  .page-eyebrow{ margin-bottom:1rem; }
+  .page-title{ font-size:clamp(2.3rem,6vw,3.6rem); margin-bottom:0.6rem; }
+  .page-sub{ color:var(--cream); opacity:0.65; margin-bottom:3.5rem; max-width:480px; font-size:1.02rem; }
+
+  /* ---- Gift box ---- */
+  .gift-stage{
+    position:relative;
+    width:220px;
+    height:220px;
+    cursor:pointer;
+    margin-bottom:1rem;
+  }
+  .gift-stage.opened{ cursor:default; }
+  .gift-box-lid{
+    position:absolute;
+    top:38px; left:10px;
+    width:200px; height:46px;
+    background:linear-gradient(165deg, var(--gold-bright), var(--gold) 60%, var(--gold-deep));
+    border-radius:8px;
+    box-shadow:0 10px 30px -8px rgba(212,175,55,0.5);
+    transition:transform 1s var(--ease), opacity 0.6s var(--ease);
+    transform-origin:50% 100%;
+    z-index:3;
+  }
+  .gift-box-lid::after{
+    content:'';
+    position:absolute;
+    left:50%; top:0;
+    width:22px; height:46px;
+    margin-left:-11px;
+    background:var(--rose-ember);
+  }
+  .gift-box-body{
+    position:absolute;
+    top:80px; left:24px;
+    width:172px; height:120px;
+    background:linear-gradient(165deg, var(--gold) , var(--gold-deep) 70%);
+    border-radius:0 0 10px 10px;
+    box-shadow:var(--shadow-soft);
+    z-index:2;
+  }
+  .gift-box-body::after{
+    content:'';
+    position:absolute;
+    left:50%; top:0; bottom:0;
+    width:22px;
+    margin-left:-11px;
+    background:var(--rose-ember);
+  }
+  .gift-bow{
+    position:absolute;
+    top:8px; left:50%;
+    width:60px; height:36px;
+    margin-left:-30px;
+    z-index:4;
+    transition:transform 0.8s var(--ease), opacity 0.5s var(--ease);
+  }
+  .gift-glow{
+    position:absolute;
+    top:-30px; left:50%;
+    width:260px; height:260px;
+    margin-left:-130px;
+    background:radial-gradient(circle, rgba(212,175,55,0.3), transparent 65%);
+    filter:blur(10px);
+    opacity:0;
+    transition:opacity 1s var(--ease);
+    z-index:0;
+  }
+  .gift-stage.opened .gift-box-lid{
+    transform:translateY(-70px) rotate(-35deg);
+    opacity:0;
+  }
+  .gift-stage.opened .gift-bow{
+    transform:translateY(-90px) scale(0.6) rotate(20deg);
+    opacity:0;
+  }
+  .gift-stage.opened .gift-glow{ opacity:1; }
+  .gift-hint{
+    font-family:'Outfit',sans-serif;
+    font-size:0.8rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold);
+    opacity:0.7;
+    animation:pulseHint 1.8s ease-in-out infinite;
+  }
+  .gift-stage.opened ~ .gift-hint{ display:none; }
+  @keyframes pulseHint{ 0%,100%{ opacity:0.4; } 50%{ opacity:0.9; } }
+
+  .wishes-reveal{
+    max-width:640px;
+    margin-top:1rem;
+    opacity:0;
+    transform:translateY(20px);
+    transition:opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    pointer-events:none;
+  }
+  .wishes-reveal.show{ opacity:1; transform:translateY(0); pointer-events:all; }
+
+  .wish-card{
+    background:linear-gradient(160deg, rgba(255,255,255,0.05), rgba(212,175,55,0.03));
+    border:1px solid rgba(212,175,55,0.25);
+    border-radius:var(--radius-lg);
+    padding:clamp(1.8rem,4vw,2.8rem);
+    text-align:left;
+    box-shadow:var(--shadow-soft);
+  }
+  .wish-card p{
+    font-size:1.08rem;
+    line-height:1.85;
+    color:var(--cream);
+    margin-bottom:1.3rem;
+  }
+  .wish-card p:last-child{ margin-bottom:0; }
+  .wish-card strong{ color:var(--gold-bright); }
+  .wish-signoff{
+    margin-top:1.6rem;
+    text-align:right;
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    color:var(--gold-bright);
+  }
+
+  .nav-area{ display:flex; justify-content:center; margin-top:3.5rem; }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<canvas id="fxCanvas"></canvas>
+
+<nav class="site-nav">
+  <a href="index.html" data-transition class="back-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18L9 12L15 6"/></svg>
+    Home
+  </a>
+  <span class="nav-brand">Birthday Wishes</span>
+</nav>
+
+<section class="page-hero">
+  <div class="section-eyebrow"><span class="line"></span> Card One <span class="line"></span></div>
+  <h1 class="page-title display gold-text">Open Your Gift</h1>
+  <p class="page-sub">Tap the box. Something heartfelt is waiting inside.</p>
+
+  <div class="gift-stage" id="giftStage">
+    <div class="gift-glow"></div>
+    <div class="gift-box-body"></div>
+    <div class="gift-box-lid"></div>
+    <svg class="gift-bow" viewBox="0 0 60 36" fill="none">
+      <circle cx="20" cy="14" r="13" fill="#c9622e"/>
+      <circle cx="40" cy="14" r="13" fill="#c9622e"/>
+      <rect x="26" y="6" width="8" height="26" rx="3" fill="#f4e4bc"/>
+    </svg>
+  </div>
+  <div class="gift-hint" id="giftHint">Tap to unwrap</div>
+
+  <div class="wishes-reveal" id="wishesReveal">
+    <div class="wish-card">
+      <p>Happy Birthday, <strong>Jagan</strong>. Today isn't just another day on the calendar — it's the day the world got a little luckier, because it got you in it.</p>
+      <p>You are the kind of <strong>brother</strong> people spend a lifetime hoping to find, and somehow I found you early. Every plan we made on a whim, every problem you showed up for without a second thought, every silly argument that ended in laughter — they're the quiet proof of something rare.</p>
+      <p>I hope this year hands you everything you deserve: peace on the hard days, people who see your worth, and enough joy to make up for every tough one you've carried quietly.</p>
+      <p>Thank you for being my person. Thank you for being family by choice.</p>
+    </div>
+    <p class="wish-signoff">With everything I've got — your brother, always.</p>
+  </div>
+
+  <div class="nav-area">
+    <a href="memories.html" data-transition class="btn btn-ghost">Next: Fun Memories →</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-names display gold-text">Jagan ✦ Forever Brothers</div>
+  <div class="footer-tag">Made with <span class="footer-heart">❤</span> for my best friend</div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  const stage = document.getElementById('giftStage');
+  const reveal = document.getElementById('wishesReveal');
+  const hint = document.getElementById('giftHint');
+  let opened = false;
+
+  stage.addEventListener('click', () => {
+    if(opened) return;
+    opened = true;
+    stage.classList.add('opened');
+    hint.style.display = 'none';
+    setTimeout(() => {
+      reveal.classList.add('show');
+      const rect = stage.getBoundingClientRect();
+      confettiBurst(rect.left + rect.width/2, rect.top + rect.height/2, {count:90});
+      reveal.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 500);
+  });
+</script>
+</body>
+</html>

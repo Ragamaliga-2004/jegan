@@ -1,0 +1,252 @@
+/* =========================================================
+   JAGAN — Premium Birthday Experience
+   Shared design system
+   ========================================================= */
+:root{
+  --void:#0a0806;
+  --surface:#16110c;
+  --surface-raised:#1f1812;
+  --gold-deep:#9c7a2e;
+  --gold:#d4af37;
+  --gold-bright:#f4e4bc;
+  --gold-glow:#ffe9a8;
+  --bronze:#8b5a2b;
+  --cream:#ece0c8;
+  --rose-ember:#c9622e;
+  --ink:#0a0806;
+  --shadow-soft: 0 20px 60px -15px rgba(0,0,0,0.7);
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--cream);
+  font-family:'Outfit', 'Inter', Helvetica, Arial, sans-serif;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  position:relative;
+  min-height:100vh;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+}
+
+.display{
+  font-family:'Playfair Display', Georgia, serif;
+  font-weight:800;
+  letter-spacing:0.01em;
+}
+
+a{color:var(--gold);}
+img{max-width:100%; display:block;}
+
+.gold-text{
+  background:linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 55%, var(--bronze) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.section-eyebrow{
+  font-family:'Outfit', sans-serif;
+  letter-spacing:0.24em;
+  text-transform:uppercase;
+  font-size:0.7rem;
+  font-weight:600;
+  color:var(--gold);
+  display:flex;
+  align-items:center;
+  gap:0.7rem;
+  justify-content:center;
+  margin-bottom:1.1rem;
+}
+.section-eyebrow .line{ width:30px; height:1px; background:var(--gold); opacity:0.6; }
+
+/* ---------------- background ambience ---------------- */
+.bg-glow{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 0%, rgba(212,175,55,0.10), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 85% 15%, rgba(201,98,46,0.08), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(212,175,55,0.06), transparent 70%);
+}
+
+#fxCanvas{
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  pointer-events:none;
+  z-index:50;
+}
+
+/* ---------------- top nav / back ---------------- */
+.site-nav{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:60;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:1.3rem 1.6rem;
+  pointer-events:none;
+}
+.site-nav > *{ pointer-events:auto; }
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  background:rgba(10,8,6,0.55);
+  border:1px solid rgba(212,175,55,0.35);
+  backdrop-filter:blur(10px);
+  color:var(--gold-bright);
+  font-family:'Outfit',sans-serif;
+  font-size:0.78rem;
+  font-weight:600;
+  letter-spacing:0.04em;
+  text-decoration:none;
+  padding:0.62rem 1.15rem 0.62rem 0.9rem;
+  border-radius:999px;
+  transition:background 0.3s var(--ease), border-color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.back-btn:hover{
+  background:rgba(212,175,55,0.15);
+  border-color:rgba(212,175,55,0.7);
+  transform:translateX(-3px);
+}
+.back-btn svg{ width:16px; height:16px; }
+.nav-brand{
+  font-family:'Playfair Display',serif;
+  font-weight:700;
+  font-size:0.95rem;
+  color:var(--gold-bright);
+  opacity:0.85;
+  letter-spacing:0.04em;
+}
+
+/* ---------------- buttons ---------------- */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:0.6rem;
+  padding:0.95rem 2rem;
+  border-radius:999px;
+  font-family:'Outfit',sans-serif;
+  font-weight:600;
+  font-size:0.95rem;
+  letter-spacing:0.02em;
+  text-decoration:none;
+  cursor:pointer;
+  border:none;
+  transition:transform 0.35s var(--ease), box-shadow 0.35s var(--ease), background 0.35s var(--ease);
+}
+.btn-gold{
+  background:linear-gradient(135deg, var(--gold-bright), var(--gold) 60%, var(--gold-deep));
+  color:#1a1108;
+  box-shadow:0 12px 30px -8px rgba(212,175,55,0.5);
+}
+.btn-gold:hover{ transform:translateY(-3px) scale(1.03); box-shadow:0 18px 40px -8px rgba(212,175,55,0.65); }
+.btn-ghost{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(212,175,55,0.4);
+  color:var(--gold-bright);
+}
+.btn-ghost:hover{ background:rgba(212,175,55,0.1); transform:translateY(-2px); }
+
+/* ---------------- reveal-on-scroll utility ---------------- */
+.reveal{
+  opacity:0;
+  transform:translateY(32px);
+  transition:opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+.reveal.in{ opacity:1; transform:translateY(0); }
+
+/* ---------------- page transition overlay ---------------- */
+.page-veil{
+  position:fixed;
+  inset:0;
+  z-index:200;
+  background:var(--void);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  opacity:0;
+}
+.page-veil.active{
+  pointer-events:all;
+  animation:veilIn 0.55s var(--ease) forwards;
+}
+.page-veil.leaving{
+  animation:veilOut 0.55s var(--ease) forwards;
+}
+@keyframes veilIn{ from{opacity:0;} to{opacity:1;} }
+@keyframes veilOut{ from{opacity:1;} to{opacity:0;} }
+.veil-mark{
+  font-family:'Playfair Display',serif;
+  font-size:1.6rem;
+  color:var(--gold);
+  letter-spacing:0.1em;
+  opacity:0.85;
+}
+
+body.loaded{ animation:bodyIn 0.6s var(--ease); }
+@keyframes bodyIn{ from{opacity:0;} to{opacity:1;} }
+
+/* ---------------- footer ---------------- */
+.site-footer{
+  padding:4rem 1.5rem 3rem;
+  text-align:center;
+  background:linear-gradient(180deg, transparent, rgba(0,0,0,0.4));
+  border-top:1px solid rgba(212,175,55,0.15);
+  position:relative;
+  z-index:1;
+}
+.footer-names{
+  font-size:1.5rem;
+  margin-bottom:0.5rem;
+}
+.footer-tag{
+  font-size:0.72rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--cream);
+  opacity:0.45;
+}
+.footer-heart{
+  display:inline-block;
+  margin:0 0.3rem;
+  animation:heartbeat 1.6s ease-in-out infinite;
+}
+@keyframes heartbeat{
+  0%,100%{ transform:scale(1); }
+  50%{ transform:scale(1.25); }
+}
+
+/* ---------------- generic container ---------------- */
+.wrap{
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 1.5rem;
+  position:relative;
+  z-index:1;
+}
+.wrap-narrow{
+  max-width:720px;
+  margin:0 auto;
+  padding:0 1.5rem;
+  position:relative;
+  z-index:1;
+}
+
+/* scrollbar */
+::-webkit-scrollbar{ width:10px; }
+::-webkit-scrollbar-track{ background:var(--void); }
+::-webkit-scrollbar-thumb{ background:var(--gold-deep); border-radius:10px; }

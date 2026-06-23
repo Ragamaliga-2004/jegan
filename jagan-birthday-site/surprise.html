@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise • Jagan</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .page-hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:7rem 1.5rem 4rem;
+  }
+  .page-title{ font-size:clamp(2.3rem,6vw,3.6rem); margin-bottom:0.6rem; }
+  .page-sub{ color:var(--cream); opacity:0.65; max-width:480px; margin:0 auto 3rem; font-size:1.02rem; }
+
+  .mystery-box{
+    position:relative;
+    width:180px; height:180px;
+    cursor:pointer;
+    transition:transform 0.4s var(--ease);
+  }
+  .mystery-box:hover{ transform:scale(1.05) rotate(-2deg); }
+  .mystery-box.shaking{ animation:shake 0.5s ease-in-out; }
+  @keyframes shake{
+    0%,100%{ transform:translateX(0) rotate(0); }
+    20%{ transform:translateX(-8px) rotate(-4deg); }
+    40%{ transform:translateX(8px) rotate(4deg); }
+    60%{ transform:translateX(-6px) rotate(-3deg); }
+    80%{ transform:translateX(6px) rotate(3deg); }
+  }
+  .mystery-box svg{ width:100%; height:100%; filter:drop-shadow(0 18px 30px rgba(212,175,55,0.3)); }
+  .mystery-box.hidden{ display:none; }
+
+  .mystery-glow{
+    position:absolute;
+    inset:-40px;
+    background:radial-gradient(circle, rgba(212,175,55,0.25), transparent 65%);
+    filter:blur(10px);
+    z-index:-1;
+    animation:glowPulse 2s ease-in-out infinite;
+  }
+  @keyframes glowPulse{ 0%,100%{ opacity:0.5; transform:scale(1); } 50%{ opacity:1; transform:scale(1.15); } }
+
+  .mystery-hint{
+    margin-top:1.4rem;
+    font-family:'Outfit',sans-serif;
+    font-size:0.78rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold);
+    opacity:0.7;
+  }
+
+  .surprise-reveal{
+    max-width:600px;
+    opacity:0;
+    transform:translateY(30px) scale(0.95);
+    transition:opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    pointer-events:none;
+    display:none;
+  }
+  .surprise-reveal.show{
+    display:block;
+    opacity:1;
+    transform:translateY(0) scale(1);
+    pointer-events:all;
+  }
+  .surprise-card{
+    background:linear-gradient(160deg, rgba(212,175,55,0.12), rgba(255,255,255,0.03));
+    border:1px solid rgba(212,175,55,0.4);
+    border-radius:var(--radius-lg);
+    padding:clamp(2rem,5vw,3rem);
+    box-shadow:0 30px 80px -15px rgba(212,175,55,0.3);
+  }
+  .surprise-emoji{ font-size:3rem; margin-bottom:1rem; }
+  .surprise-card h2{
+    font-family:'Playfair Display',serif;
+    color:var(--gold-bright);
+    font-size:clamp(1.6rem,4vw,2.2rem);
+    margin-bottom:1.2rem;
+  }
+  .surprise-card p{
+    font-size:1.05rem;
+    line-height:1.8;
+    color:var(--cream);
+  }
+  .surprise-card p + p{ margin-top:1rem; }
+
+  .nav-area{ display:flex; justify-content:center; gap:1rem; margin-top:3rem; flex-wrap:wrap; }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<canvas id="fxCanvas"></canvas>
+
+<nav class="site-nav">
+  <a href="index.html" data-transition class="back-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18L9 12L15 6"/></svg>
+    Home
+  </a>
+  <span class="nav-brand">Birthday Surprise</span>
+</nav>
+
+<section class="page-hero">
+  <div class="section-eyebrow"><span class="line"></span> Card Five <span class="line"></span></div>
+  <h1 class="page-title display gold-text">A Mystery Box</h1>
+  <p class="page-sub">Curious? You only get one way to find out what's inside.</p>
+
+  <div style="position:relative;" id="boxWrap">
+    <div class="mystery-glow"></div>
+    <div class="mystery-box" id="mysteryBox">
+      <svg viewBox="0 0 100 100" fill="none">
+        <rect x="14" y="40" width="72" height="48" rx="4" fill="#c9622e"/>
+        <rect x="14" y="40" width="72" height="14" fill="#9c7a2e"/>
+        <rect x="44" y="40" width="12" height="48" fill="#f4e4bc"/>
+        <path d="M50 38C50 38 30 26 36 14C42 2 56 16 50 38Z" fill="#d4af37"/>
+        <path d="M50 38C50 38 70 26 64 14C58 2 44 16 50 38Z" fill="#d4af37"/>
+        <text x="50" y="76" text-anchor="middle" font-size="28" fill="#f4e4bc" font-family="Georgia,serif" font-weight="bold">?</text>
+      </svg>
+    </div>
+  </div>
+  <div class="mystery-hint" id="mysteryHint">Tap the box</div>
+
+  <div class="surprise-reveal" id="surpriseReveal">
+    <div class="surprise-card">
+      <div class="surprise-emoji">🎉</div>
+      <h2>Surprise, machi!</h2>
+      <p>There's no hidden prize inside this box — the surprise is just this: an entire website, built quietly, just so you'd know exactly how much you're valued.</p>
+      <p>No one made me do this. I wanted to. Because somewhere between all our nonsense and our real conversations, you became one of the most important people in my life — and you deserved a birthday that felt like it.</p>
+      <p>Happy Birthday, Jagan. Here's to another year of being unreasonably loyal to each other.</p>
+    </div>
+  </div>
+
+  <div class="nav-area">
+    <a href="gallery.html" data-transition class="btn btn-ghost">← Photo Gallery</a>
+    <a href="future.html" data-transition class="btn btn-ghost">Future Goals →</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-names display gold-text">Jagan ✦ Forever Brothers</div>
+  <div class="footer-tag">Made with <span class="footer-heart">❤</span> for my best friend</div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  const box = document.getElementById('mysteryBox');
+  const hint = document.getElementById('mysteryHint');
+  const reveal = document.getElementById('surpriseReveal');
+  let clicked = false;
+  let shakeCount = 0;
+
+  box.addEventListener('click', () => {
+    if(clicked) return;
+    shakeCount++;
+    box.classList.add('shaking');
+    setTimeout(() => box.classList.remove('shaking'), 500);
+
+    if(shakeCount === 1){
+      hint.textContent = "It's wobbling... tap again";
+      return;
+    }
+    clicked = true;
+    hint.style.display = 'none';
+    box.classList.add('hidden');
+
+    const rect = document.getElementById('boxWrap').getBoundingClientRect();
+    confettiBurst(rect.left + rect.width/2, rect.top + rect.height/2, {count:140});
+    setTimeout(() => confettiBurst(window.innerWidth*0.2, window.innerHeight*0.3, {count:50}), 150);
+    setTimeout(() => confettiBurst(window.innerWidth*0.8, window.innerHeight*0.3, {count:50}), 300);
+
+    setTimeout(() => {
+      reveal.classList.add('show');
+      reveal.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 350);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jagan • Birthday Experience</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  /* ===== Home-specific ===== */
+  .nav-brand{ visibility:hidden; }
+
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    overflow:hidden;
+    padding:6rem 1.5rem 4rem;
+  }
+  .hero-photo-wrap{
+    position:absolute; inset:0; z-index:0;
+  }
+  .hero-photo-wrap img{
+    width:100%; height:100%;
+    object-fit:cover;
+    object-position:center 22%;
+    opacity:0.32;
+    filter:saturate(1.05) contrast(1.05);
+  }
+  .hero-photo-wrap::after{
+    content:'';
+    position:absolute; inset:0;
+    background:
+      linear-gradient(180deg, rgba(10,8,6,0.55) 0%, rgba(10,8,6,0.75) 40%, rgba(10,8,6,0.98) 90%);
+  }
+  .balloon{
+    position:absolute;
+    z-index:1;
+    width:54px;
+    border-radius:50% 50% 50% 50% / 55% 55% 45% 45%;
+    opacity:0.85;
+    animation:floatBalloon 7s ease-in-out infinite;
+    filter:drop-shadow(0 10px 18px rgba(0,0,0,0.4));
+  }
+  .balloon::after{
+    content:'';
+    position:absolute;
+    bottom:-22px; left:50%;
+    width:1px; height:22px;
+    background:rgba(212,175,55,0.4);
+  }
+  @keyframes floatBalloon{
+    0%,100%{ transform:translateY(0) rotate(-3deg); }
+    50%{ transform:translateY(-22px) rotate(3deg); }
+  }
+  .hero-content{ position:relative; z-index:2; max-width:760px; }
+  .hero-eyebrow{
+    display:flex; align-items:center; gap:0.8rem; justify-content:center;
+    margin-bottom:1.6rem;
+    opacity:0;
+    animation:fadeUp 0.9s var(--ease) 0.1s forwards;
+  }
+  .hero-eyebrow .line{ width:36px; height:1px; background:var(--gold); opacity:0.7; }
+  .hero-eyebrow span.label{
+    font-family:'Outfit',sans-serif; font-size:0.74rem; letter-spacing:0.26em; text-transform:uppercase; color:var(--gold);
+  }
+  .hero-greeting{
+    font-size:clamp(1.3rem,3vw,1.7rem);
+    color:var(--cream);
+    opacity:0;
+    margin-bottom:0.4rem;
+    animation:fadeUp 0.9s var(--ease) 0.25s forwards;
+  }
+  .hero-name{
+    font-size:clamp(4rem, 17vw, 9.5rem);
+    line-height:0.9;
+    opacity:0;
+    animation:fadeUp 1s var(--ease) 0.4s forwards;
+  }
+  .hero-sub{
+    margin-top:1.5rem;
+    font-size:clamp(1.05rem, 2.4vw, 1.4rem);
+    color:var(--cream);
+    opacity:0;
+    font-weight:300;
+    animation:fadeUp 0.9s var(--ease) 0.6s forwards;
+  }
+  .hero-date-badge{
+    margin-top:2.2rem;
+    display:inline-flex;
+    align-items:center;
+    gap:0.6rem;
+    padding:0.7rem 1.4rem;
+    border:1px solid rgba(212,175,55,0.4);
+    border-radius:999px;
+    background:rgba(212,175,55,0.06);
+    font-family:'Outfit',sans-serif;
+    font-size:0.85rem;
+    letter-spacing:0.12em;
+    color:var(--gold-bright);
+    opacity:0;
+    animation:fadeUp 0.9s var(--ease) 0.75s forwards;
+  }
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(22px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .scroll-cue{
+    position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
+    z-index:2; display:flex; flex-direction:column; align-items:center; gap:0.5rem;
+    color:var(--cream); opacity:0.5;
+    animation:bob 2.4s ease-in-out infinite;
+  }
+  @keyframes bob{ 0%,100%{ transform:translate(-50%,0); } 50%{ transform:translate(-50%,8px); } }
+  .scroll-cue span{ font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; font-family:'Outfit',sans-serif; }
+
+  /* ===== Countdown ===== */
+  .countdown-section{ padding:6rem 1.5rem 5rem; text-align:center; position:relative; }
+  .countdown-title{ font-size:clamp(1.9rem, 4.5vw, 2.9rem); margin-bottom:3rem; }
+  .countdown-grid{ display:flex; justify-content:center; gap:1.1rem; flex-wrap:wrap; max-width:760px; margin:0 auto; }
+  .count-box{
+    background:linear-gradient(165deg, rgba(212,175,55,0.1), rgba(139,90,43,0.05));
+    border:1px solid rgba(212,175,55,0.3);
+    border-radius:var(--radius-md);
+    padding:1.7rem 1.3rem;
+    min-width:104px;
+    position:relative;
+    transition:transform 0.4s var(--ease), border-color 0.4s var(--ease);
+  }
+  .count-box:hover{ transform:translateY(-6px); border-color:rgba(212,175,55,0.6); }
+  .count-num{ font-family:'Playfair Display',serif; font-weight:800; font-size:2.7rem; color:var(--gold-bright); line-height:1; }
+  .count-label{ font-family:'Outfit',sans-serif; font-size:0.66rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--cream); opacity:0.65; margin-top:0.7rem; }
+  .countdown-arrived{ display:none; font-size:clamp(2rem,6vw,3.4rem); color:var(--gold-bright); }
+
+  /* ===== Message ===== */
+  .message-section{ padding:5rem 1.5rem 6rem; text-align:center; }
+  .message-card{
+    background:linear-gradient(160deg, rgba(255,255,255,0.04), rgba(212,175,55,0.03));
+    border:1px solid rgba(212,175,55,0.22);
+    border-radius:var(--radius-lg);
+    padding:clamp(2rem,5vw,3.2rem);
+    box-shadow:var(--shadow-soft);
+    position:relative;
+  }
+  .message-card::before{
+    content:'❝';
+    position:absolute;
+    top:-18px; left:32px;
+    font-family:'Playfair Display',serif;
+    font-size:3.4rem;
+    color:var(--gold);
+    opacity:0.5;
+    background:var(--void);
+    padding:0 12px;
+  }
+  #typedMessage{
+    font-size:clamp(1.05rem, 2.2vw, 1.35rem);
+    line-height:1.8;
+    color:var(--cream);
+    min-height:9.5em;
+    text-align:left;
+  }
+  .message-signoff{
+    margin-top:1.8rem;
+    text-align:right;
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    color:var(--gold-bright);
+    font-size:1.15rem;
+  }
+
+  /* ===== Cards Grid ===== */
+  .cards-section{ padding:4rem 1.5rem 7rem; text-align:center; }
+  .cards-title{ font-size:clamp(1.9rem,4.5vw,2.9rem); margin-bottom:0.6rem; }
+  .cards-sub{ color:var(--cream); opacity:0.65; margin-bottom:3.2rem; font-size:1.02rem; }
+  .cards-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:1.4rem;
+    max-width:980px;
+    margin:0 auto;
+  }
+  .bcard{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    text-decoration:none;
+    padding:2.6rem 1.6rem 2.2rem;
+    border-radius:var(--radius-lg);
+    background:linear-gradient(165deg, rgba(255,255,255,0.05), rgba(212,175,55,0.02));
+    border:1px solid rgba(212,175,55,0.2);
+    overflow:hidden;
+    transition:transform 0.45s var(--ease), border-color 0.45s var(--ease), box-shadow 0.45s var(--ease);
+  }
+  .bcard::before{
+    content:'';
+    position:absolute; inset:0;
+    background:radial-gradient(circle at 50% 0%, rgba(212,175,55,0.16), transparent 65%);
+    opacity:0;
+    transition:opacity 0.45s var(--ease);
+  }
+  .bcard:hover{
+    transform:translateY(-10px) scale(1.02);
+    border-color:rgba(212,175,55,0.55);
+    box-shadow:0 25px 60px -15px rgba(212,175,55,0.25);
+  }
+  .bcard:hover::before{ opacity:1; }
+  .bcard-icon{
+    width:64px; height:64px;
+    margin-bottom:1.3rem;
+    position:relative;
+    z-index:1;
+  }
+  .bcard-icon svg{ width:100%; height:100%; }
+  .bcard-title{
+    font-family:'Playfair Display',serif;
+    font-weight:700;
+    font-size:1.32rem;
+    color:var(--gold-bright);
+    margin-bottom:0.5rem;
+    position:relative; z-index:1;
+  }
+  .bcard-desc{
+    font-size:0.88rem;
+    color:var(--cream);
+    opacity:0.6;
+    position:relative; z-index:1;
+    line-height:1.5;
+  }
+  .bcard-arrow{
+    margin-top:1.2rem;
+    width:34px; height:34px;
+    border-radius:50%;
+    border:1px solid rgba(212,175,55,0.4);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--gold);
+    position:relative; z-index:1;
+    transition:background 0.4s var(--ease), transform 0.4s var(--ease);
+  }
+  .bcard:hover .bcard-arrow{ background:var(--gold); color:var(--ink); transform:translateX(4px); }
+
+  /* ===== Easter egg ===== */
+  .egg-trigger{
+    position:fixed;
+    bottom:1.4rem; right:1.4rem;
+    width:46px; height:46px;
+    border-radius:50%;
+    background:rgba(212,175,55,0.08);
+    border:1px solid rgba(212,175,55,0.3);
+    z-index:40;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.2rem;
+    opacity:0.4;
+    transition:opacity 0.4s ease, transform 0.4s ease;
+  }
+  .egg-trigger:hover{ opacity:1; transform:scale(1.1) rotate(15deg); }
+
+  .egg-modal{
+    position:fixed; inset:0; z-index:250;
+    display:none;
+    align-items:center; justify-content:center;
+    background:rgba(10,8,6,0.88);
+    backdrop-filter:blur(6px);
+    padding:1.5rem;
+  }
+  .egg-modal.show{ display:flex; }
+  .egg-box{
+    max-width:420px;
+    text-align:center;
+    background:linear-gradient(160deg, rgba(212,175,55,0.1), rgba(255,255,255,0.03));
+    border:1px solid rgba(212,175,55,0.4);
+    border-radius:var(--radius-lg);
+    padding:2.6rem 2rem;
+    position:relative;
+    animation:eggPop 0.5s var(--ease);
+  }
+  @keyframes eggPop{ from{ opacity:0; transform:scale(0.85); } to{ opacity:1; transform:scale(1); } }
+  .egg-box h3{ font-family:'Playfair Display',serif; color:var(--gold-bright); font-size:1.5rem; margin-bottom:0.8rem; }
+  .egg-box p{ font-size:0.98rem; color:var(--cream); opacity:0.85; line-height:1.6; margin-bottom:1.4rem; }
+  .egg-close{
+    position:absolute; top:14px; right:16px;
+    background:none; border:none; color:var(--gold); font-size:1.3rem; cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<canvas id="fxCanvas"></canvas>
+
+<nav class="site-nav">
+  <span class="nav-brand">Jagan</span>
+  <span></span>
+</nav>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-photo-wrap">
+    <img src="assets/photo-3.jpeg" alt="Jagan at the temple">
+  </div>
+
+  <svg class="balloon" style="left:8%; top:18%; background:linear-gradient(160deg,#f4e4bc,#d4af37); animation-delay:0s;" viewBox="0 0 40 50"></svg>
+  <svg class="balloon" style="left:80%; top:12%; width:42px; background:linear-gradient(160deg,#c9622e,#9c7a2e); animation-delay:1.2s;" viewBox="0 0 40 50"></svg>
+  <svg class="balloon" style="left:88%; top:55%; width:36px; background:linear-gradient(160deg,#ece0c8,#8b5a2b); animation-delay:2.4s;" viewBox="0 0 40 50"></svg>
+  <svg class="balloon" style="left:5%; top:62%; width:46px; background:linear-gradient(160deg,#d4af37,#c9622e); animation-delay:0.6s;" viewBox="0 0 40 50"></svg>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="line"></span>
+      <span class="label">A Premium Birthday Experience</span>
+      <span class="line"></span>
+    </div>
+    <p class="hero-greeting">Happy Birthday</p>
+    <h1 class="hero-name display gold-text">JAGAN</h1>
+    <p class="hero-sub">My brother. My best friend. My constant.</p>
+    <div class="hero-date-badge">✦ &nbsp;24 JUNE 2026&nbsp; ✦</div>
+  </div>
+
+  <div class="scroll-cue">
+    <span>Scroll to begin</span>
+    <svg width="14" height="20" viewBox="0 0 14 20" fill="none"><path d="M7 1V19M7 19L1 13M7 19L13 13" stroke="currentColor" stroke-width="1.4"/></svg>
+  </div>
+</section>
+
+<!-- ================= COUNTDOWN ================= -->
+<section class="countdown-section">
+  <div class="section-eyebrow"><span class="line"></span> The Wait Is Almost Over <span class="line"></span></div>
+  <h2 class="countdown-title display reveal">Counting down to your day</h2>
+  <div class="countdown-grid" id="countdownGrid">
+    <div class="count-box reveal"><div class="count-num" id="cd-days">--</div><div class="count-label">Days</div></div>
+    <div class="count-box reveal"><div class="count-num" id="cd-hours">--</div><div class="count-label">Hours</div></div>
+    <div class="count-box reveal"><div class="count-num" id="cd-mins">--</div><div class="count-label">Minutes</div></div>
+    <div class="count-box reveal"><div class="count-num" id="cd-secs">--</div><div class="count-label">Seconds</div></div>
+  </div>
+  <div class="countdown-arrived display" id="countdownArrived">இன்று உங்கள் நாள்! 🎉</div>
+</section>
+
+<!-- ================= MESSAGE ================= -->
+<section class="message-section">
+  <div class="wrap-narrow">
+    <div class="section-eyebrow"><span class="line"></span> A Note, Just For You <span class="line"></span></div>
+    <div class="message-card reveal">
+      <p id="typedMessage"></p>
+      <p class="message-signoff">— Forever your brother</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CARDS GRID ================= -->
+<section class="cards-section">
+  <div class="section-eyebrow"><span class="line"></span> Choose Your Adventure <span class="line"></span></div>
+  <h2 class="cards-title display reveal">Your Birthday Adventure</h2>
+  <p class="cards-sub reveal">Six doors. Six memories. Tap one to begin.</p>
+
+  <div class="cards-grid">
+
+    <a href="wishes.html" data-transition class="bcard reveal">
+      <div class="bcard-icon">
+        <svg viewBox="0 0 64 64" fill="none">
+          <rect x="10" y="26" width="44" height="30" rx="3" fill="#d4af37" opacity="0.9"/>
+          <rect x="10" y="26" width="44" height="9" fill="#9c7a2e"/>
+          <rect x="28" y="26" width="8" height="30" fill="#c9622e"/>
+          <path d="M32 26C32 26 22 18 26 12C30 6 36 14 32 26Z" fill="#f4e4bc"/>
+          <path d="M32 26C32 26 42 18 38 12C34 6 28 14 32 26Z" fill="#f4e4bc"/>
+        </svg>
+      </div>
+      <div class="bcard-title">Birthday Wishes</div>
+      <div class="bcard-desc">Open the gift box and unwrap heartfelt words made just for you.</div>
+      <div class="bcard-arrow">→</div>
+    </a>
+
+    <a href="memories.html" data-transition class="bcard reveal">
+      <div class="bcard-icon">
+        <svg viewBox="0 0 64 64" fill="none">
+          <rect x="8" y="10" width="36" height="44" rx="2" fill="#ece0c8" transform="rotate(-8 26 32)"/>
+          <rect x="14" y="16" width="24" height="20" fill="#8b5a2b" transform="rotate(-8 26 26)"/>
+          <rect x="20" y="14" width="38" height="46" rx="2" fill="#f4e4bc" transform="rotate(6 39 37)"/>
+          <rect x="25" y="20" width="28" height="22" fill="#c9622e" transform="rotate(6 39 31)"/>
+        </svg>
+      </div>
+      <div class="bcard-title">Fun Memories</div>
+      <div class="bcard-desc">A polaroid scrapbook of the moments that built our brotherhood.</div>
+      <div class="bcard-arrow">→</div>
+    </a>
+
+    <a href="journey.html" data-transition class="bcard reveal">
+      <div class="bcard-icon">
+        <svg viewBox="0 0 64 64" fill="none">
+          <rect x="6" y="34" width="28" height="16" rx="3" fill="#d4af37"/>
+          <rect x="34" y="28" width="20" height="22" rx="3" fill="#c9622e"/>
+          <circle cx="16" cy="52" r="5" fill="#1f1812" stroke="#f4e4bc" stroke-width="2"/>
+          <circle cx="30" cy="52" r="5" fill="#1f1812" stroke="#f4e4bc" stroke-width="2"/>
+          <circle cx="44" cy="52" r="5" fill="#1f1812" stroke="#f4e4bc" stroke-width="2"/>
+          <rect x="10" y="22" width="8" height="12" fill="#f4e4bc"/>
+        </svg>
+      </div>
+      <div class="bcard-title">Friendship Journey</div>
+      <div class="bcard-desc">Follow the track of every chapter we've ridden through together.</div>
+      <div class="bcard-arrow">→</div>
+    </a>
+
+    <a href="gallery.html" data-transition class="bcard reveal">
+      <div class="bcard-icon">
+        <svg viewBox="0 0 64 64" fill="none">
+          <rect x="8" y="20" width="48" height="32" rx="4" fill="#1f1812" stroke="#d4af37" stroke-width="2"/>
+          <rect x="22" y="14" width="20" height="10" rx="2" fill="#d4af37"/>
+          <circle cx="32" cy="36" r="10" fill="#0a0806" stroke="#f4e4bc" stroke-width="2"/>
+          <circle cx="32" cy="36" r="4" fill="#f4e4bc"/>
+          <circle cx="48" cy="26" r="2" fill="#f4e4bc"/>
+        </svg>
+      </div>
+      <div class="bcard-title">Photo Gallery</div>
+      <div class="bcard-desc">Golden hour, stone walls, and the two of us — frame by frame.</div>
+      <div class="bcard-arrow">→</div>
+    </a>
+
+    <a href="surprise.html" data-transition class="bcard reveal">
+      <div class="bcard-icon">
+        <svg viewBox="0 0 64 64" fill="none">
+          <rect x="12" y="28" width="40" height="26" rx="2" fill="#c9622e"/>
+          <rect x="12" y="28" width="40" height="8" fill="#9c7a2e"/>
+          <rect x="28" y="28" width="8" height="26" fill="#f4e4bc"/>
+          <text x="32" y="22" text-anchor="middle" font-size="16" fill="#f4e4bc" font-family="Georgia,serif">?</text>
+        </svg>
+      </div>
+      <div class="bcard-title">Birthday Surprise</div>
+      <div class="bcard-desc">A mystery box. One click. You'll just have to see for yourself.</div>
+      <div class="bcard-arrow">→</div>
+    </a>
+
+    <a href="future.html" data-transition class="bcard reveal">
+      <div class="bcard-icon">
+        <svg viewBox="0 0 64 64" fill="none">
+          <path d="M32 6C40 14 42 28 38 42L26 42C22 28 24 14 32 6Z" fill="#d4af37"/>
+          <circle cx="32" cy="20" r="5" fill="#1f1812"/>
+          <path d="M26 42L20 54L28 50Z" fill="#c9622e"/>
+          <path d="M38 42L44 54L36 50Z" fill="#c9622e"/>
+          <path d="M28 50L32 60L36 50Z" fill="#f4e4bc"/>
+        </svg>
+      </div>
+      <div class="bcard-title">Future Goals</div>
+      <div class="bcard-desc">Dreams, wishes, and everything I see waiting for you ahead.</div>
+      <div class="bcard-arrow">→</div>
+    </a>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-names display gold-text">Jagan ✦ Forever Brothers</div>
+  <div class="footer-tag">Made with <span class="footer-heart">❤</span> for my best friend</div>
+</footer>
+
+<!-- Easter egg -->
+<div class="egg-trigger" id="eggTrigger" title="???">✦</div>
+<div class="egg-modal" id="eggModal">
+  <div class="egg-box">
+    <button class="egg-close" id="eggClose">✕</button>
+    <h3>You found it 👀</h3>
+    <p>Most people never click the little gold star. But you did — because you've always been the one who notices things. Happy Birthday, machi. This whole site exists because you're worth the effort.</p>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+  const fullMessage = "Da Jagan, from the streets we grew up on to every temple gopuram we've stood under chasing the evening light — you've never once felt like just a friend. You're the brother I got to choose. The one who shows up without being asked, who laughs the loudest at my worst jokes, and who I trust with the parts of my life I don't show anyone else. Today the world gets to celebrate the version of you I've always known — loyal, full of life, and quietly the strongest person I know. May this year give you everything you've been chasing, and may we still be sitting on some old stone wall talking nonsense thirty years from now.";
+
+  const msgEl = document.getElementById('typedMessage');
+  const msgObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        typeText(msgEl, fullMessage, 18);
+        msgObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.4 });
+  msgObserver.observe(document.querySelector('.message-card'));
+
+  // easter egg
+  const eggTrigger = document.getElementById('eggTrigger');
+  const eggModal = document.getElementById('eggModal');
+  const eggClose = document.getElementById('eggClose');
+  eggTrigger.addEventListener('click', () => {
+    eggModal.classList.add('show');
+    confettiBurst(window.innerWidth/2, window.innerHeight/2, {count:80});
+  });
+  eggClose.addEventListener('click', () => eggModal.classList.remove('show'));
+  eggModal.addEventListener('click', (e) => { if(e.target === eggModal) eggModal.classList.remove('show'); });
+</script>
+</body>
+</html>

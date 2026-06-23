@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photo Gallery • Jagan</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .page-hero{ padding:7rem 1.5rem 2rem; text-align:center; }
+  .page-title{ font-size:clamp(2.3rem,6vw,3.6rem); margin-bottom:0.6rem; }
+  .page-sub{ color:var(--cream); opacity:0.65; max-width:520px; margin:0 auto; font-size:1.02rem; }
+
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1.4rem;
+    max-width:980px;
+    margin:3.5rem auto 0;
+    padding:0 1.5rem 6rem;
+  }
+  @media (max-width:760px){
+    .gallery-grid{ grid-template-columns:1fr; max-width:420px; }
+  }
+  .g-item{
+    position:relative;
+    border-radius:var(--radius-md);
+    overflow:hidden;
+    aspect-ratio:3/4;
+    cursor:pointer;
+    border:1px solid rgba(212,175,55,0.25);
+    box-shadow:0 16px 40px -12px rgba(0,0,0,0.6);
+  }
+  .g-item img{
+    width:100%; height:100%;
+    object-fit:cover;
+    transition:transform 0.6s var(--ease), filter 0.6s var(--ease);
+  }
+  .g-item:hover img{ transform:scale(1.1); filter:brightness(1.05); }
+  .g-item::after{
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, transparent 55%, rgba(10,8,6,0.85) 100%);
+  }
+  .g-cap{
+    position:absolute;
+    bottom:1rem; left:1.1rem; right:1.1rem;
+    z-index:2;
+    text-align:left;
+    font-family:'Outfit',sans-serif;
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+  }
+  .g-zoom-icon{
+    position:absolute;
+    top:0.9rem; right:0.9rem;
+    width:32px; height:32px;
+    border-radius:50%;
+    background:rgba(10,8,6,0.5);
+    border:1px solid rgba(212,175,55,0.4);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--gold-bright);
+    z-index:2;
+    font-size:0.9rem;
+  }
+
+  /* lightbox */
+  .lightbox{
+    position:fixed; inset:0;
+    z-index:300;
+    display:none;
+    align-items:center; justify-content:center;
+    background:rgba(5,4,3,0.94);
+    backdrop-filter:blur(8px);
+    padding:2rem 1.5rem;
+  }
+  .lightbox.show{ display:flex; }
+  .lightbox-inner{
+    max-width:760px;
+    width:100%;
+    text-align:center;
+    animation:lbIn 0.4s var(--ease);
+  }
+  @keyframes lbIn{ from{ opacity:0; transform:scale(0.92); } to{ opacity:1; transform:scale(1); } }
+  .lightbox-inner img{
+    max-height:75vh;
+    width:auto;
+    margin:0 auto;
+    border-radius:8px;
+    border:1px solid rgba(212,175,55,0.3);
+    box-shadow:0 30px 80px -20px rgba(0,0,0,0.8);
+  }
+  .lightbox-cap{
+    margin-top:1.3rem;
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    color:var(--gold-bright);
+    font-size:1.1rem;
+  }
+  .lightbox-close{
+    position:fixed;
+    top:1.5rem; right:1.5rem;
+    width:44px; height:44px;
+    border-radius:50%;
+    background:rgba(212,175,55,0.1);
+    border:1px solid rgba(212,175,55,0.4);
+    color:var(--gold-bright);
+    font-size:1.3rem;
+    cursor:pointer;
+    z-index:301;
+  }
+  .lightbox-nav{
+    position:fixed;
+    top:50%;
+    transform:translateY(-50%);
+    width:48px; height:48px;
+    border-radius:50%;
+    background:rgba(212,175,55,0.1);
+    border:1px solid rgba(212,175,55,0.4);
+    color:var(--gold-bright);
+    font-size:1.4rem;
+    cursor:pointer;
+    z-index:301;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lightbox-prev{ left:1.5rem; }
+  .lightbox-next{ right:1.5rem; }
+  @media (max-width:600px){
+    .lightbox-nav{ width:38px; height:38px; font-size:1.1rem; }
+  }
+
+  .nav-area{ display:flex; justify-content:center; gap:1rem; margin-top:-3rem; flex-wrap:wrap; padding-bottom:3rem; position:relative; z-index:1;}
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<canvas id="fxCanvas"></canvas>
+
+<nav class="site-nav">
+  <a href="index.html" data-transition class="back-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18L9 12L15 6"/></svg>
+    Home
+  </a>
+  <span class="nav-brand">Photo Gallery</span>
+</nav>
+
+<section class="page-hero">
+  <div class="section-eyebrow"><span class="line"></span> Card Four <span class="line"></span></div>
+  <h1 class="page-title display gold-text">Frame By Frame</h1>
+  <p class="page-sub">Tap any photo for a closer look.</p>
+</section>
+
+<div class="gallery-grid">
+  <div class="g-item reveal" data-index="0">
+    <img src="assets/photo-1.jpeg" alt="Jagan at the temple, looking into the distance">
+    <div class="g-zoom-icon">⤢</div>
+    <div class="g-cap">The calm before the photo</div>
+  </div>
+  <div class="g-item reveal" data-index="1">
+    <img src="assets/photo-2.jpeg" alt="Jagan sitting on the temple wall, looking at camera">
+    <div class="g-zoom-icon">⤢</div>
+    <div class="g-cap">That golden hour stare</div>
+  </div>
+  <div class="g-item reveal" data-index="2">
+    <img src="assets/photo-3.jpeg" alt="Jagan facing the temple gopuram">
+    <div class="g-zoom-icon">⤢</div>
+    <div class="g-cap">Facing something bigger</div>
+  </div>
+</div>
+
+<div class="nav-area">
+  <a href="journey.html" data-transition class="btn btn-ghost">← Friendship Journey</a>
+  <a href="surprise.html" data-transition class="btn btn-ghost">Birthday Surprise →</a>
+</div>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lbClose">✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lbPrev">‹</button>
+  <button class="lightbox-nav lightbox-next" id="lbNext">›</button>
+  <div class="lightbox-inner">
+    <img id="lbImg" src="" alt="">
+    <div class="lightbox-cap" id="lbCap"></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-names display gold-text">Jagan ✦ Forever Brothers</div>
+  <div class="footer-tag">Made with <span class="footer-heart">❤</span> for my best friend</div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+  const photos = [
+    { src:'assets/photo-1.jpeg', cap:'The calm before the photo' },
+    { src:'assets/photo-2.jpeg', cap:'That golden hour stare' },
+    { src:'assets/photo-3.jpeg', cap:'Facing something bigger' }
+  ];
+  let current = 0;
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbCap = document.getElementById('lbCap');
+
+  function openLightbox(i){
+    current = i;
+    lbImg.src = photos[i].src;
+    lbCap.textContent = photos[i].cap;
+    lightbox.classList.add('show');
+  }
+  function closeLightbox(){ lightbox.classList.remove('show'); }
+  function nav(dir){
+    current = (current + dir + photos.length) % photos.length;
+    lbImg.src = photos[current].src;
+    lbCap.textContent = photos[current].cap;
+  }
+
+  document.querySelectorAll('.g-item').forEach(item => {
+    item.addEventListener('click', () => openLightbox(parseInt(item.dataset.index)));
+  });
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
+  document.getElementById('lbPrev').addEventListener('click', () => nav(-1));
+  document.getElementById('lbNext').addEventListener('click', () => nav(1));
+  lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => {
+    if(!lightbox.classList.contains('show')) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft') nav(-1);
+    if(e.key === 'ArrowRight') nav(1);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fun Memories • Jagan</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .page-hero{
+    padding:7rem 1.5rem 3rem;
+    text-align:center;
+  }
+  .page-title{ font-size:clamp(2.3rem,6vw,3.6rem); margin-bottom:0.6rem; }
+  .page-sub{ color:var(--cream); opacity:0.65; max-width:520px; margin:0 auto 1rem; font-size:1.02rem; }
+
+  .corkboard{
+    position:relative;
+    max-width:1000px;
+    margin:3rem auto 0;
+    padding:3rem 1.5rem 4rem;
+    background:
+      radial-gradient(circle at 10% 20%, rgba(139,90,43,0.08), transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(212,175,55,0.07), transparent 50%);
+  }
+  .polaroid-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:2.4rem 1.8rem;
+    max-width:920px;
+    margin:0 auto;
+  }
+  @media (max-width:760px){
+    .polaroid-grid{ grid-template-columns:repeat(2, 1fr); gap:2rem 1rem; }
+  }
+  @media (max-width:480px){
+    .polaroid-grid{ grid-template-columns:1fr; max-width:300px; }
+  }
+  .polaroid{
+    background:#f4f0e6;
+    padding:14px 14px 50px;
+    border-radius:3px;
+    box-shadow:0 18px 40px -10px rgba(0,0,0,0.55), 0 2px 4px rgba(0,0,0,0.2);
+    transition:transform 0.5s var(--ease), box-shadow 0.5s var(--ease), z-index 0s;
+    position:relative;
+    cursor:default;
+  }
+  .polaroid:hover{
+    transform:scale(1.07) rotate(0deg) !important;
+    box-shadow:0 30px 60px -10px rgba(212,175,55,0.35), 0 4px 8px rgba(0,0,0,0.3);
+    z-index:10;
+  }
+  .polaroid:nth-child(1){ transform:rotate(-4deg); }
+  .polaroid:nth-child(2){ transform:rotate(3deg) translateY(18px); }
+  .polaroid:nth-child(3){ transform:rotate(-2deg); }
+  .polaroid img{
+    width:100%;
+    aspect-ratio:3/4;
+    object-fit:cover;
+    display:block;
+    filter:sepia(0.12) contrast(1.05);
+  }
+  .polaroid-cap{
+    position:absolute;
+    bottom:14px; left:14px; right:14px;
+    text-align:center;
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    color:#2b2014;
+    font-size:0.92rem;
+  }
+  .pin{
+    position:absolute;
+    top:-8px; left:50%;
+    width:16px; height:16px;
+    margin-left:-8px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #f4e4bc, #c9622e 70%);
+    box-shadow:0 3px 6px rgba(0,0,0,0.5);
+    z-index:5;
+  }
+
+  /* timeline */
+  .timeline-section{ padding:5rem 1.5rem 6rem; }
+  .timeline-title{ text-align:center; font-size:clamp(1.8rem,4.5vw,2.6rem); margin-bottom:3.5rem; }
+  .timeline{
+    max-width:680px;
+    margin:0 auto;
+    position:relative;
+    padding-left:2.4rem;
+    border-left:1px solid rgba(212,175,55,0.3);
+  }
+  .t-item{
+    position:relative;
+    margin-bottom:3rem;
+  }
+  .t-item:last-child{ margin-bottom:0; }
+  .t-item::before{
+    content:'';
+    position:absolute;
+    left:-2.65rem; top:0.2rem;
+    width:12px; height:12px;
+    border-radius:50%;
+    background:var(--gold-bright);
+    box-shadow:0 0 0 4px var(--void), 0 0 16px rgba(212,175,55,0.6);
+  }
+  .t-year{
+    font-family:'Outfit',sans-serif;
+    font-size:0.74rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:0.4rem;
+  }
+  .t-title{
+    font-family:'Playfair Display',serif;
+    font-size:1.35rem;
+    color:var(--cream);
+    margin-bottom:0.5rem;
+  }
+  .t-desc{
+    font-size:0.98rem;
+    color:var(--cream);
+    opacity:0.65;
+    line-height:1.6;
+  }
+
+  .nav-area{ display:flex; justify-content:center; gap:1rem; margin-top:1rem; flex-wrap:wrap; padding-bottom:3rem;}
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<canvas id="fxCanvas"></canvas>
+
+<nav class="site-nav">
+  <a href="index.html" data-transition class="back-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18L9 12L15 6"/></svg>
+    Home
+  </a>
+  <span class="nav-brand">Fun Memories</span>
+</nav>
+
+<section class="page-hero">
+  <div class="section-eyebrow"><span class="line"></span> Card Two <span class="line"></span></div>
+  <h1 class="page-title display gold-text">The Scrapbook</h1>
+  <p class="page-sub">A few frames from the evenings we won't forget.</p>
+</section>
+
+<div class="corkboard">
+  <div class="polaroid-grid">
+    <div class="polaroid reveal">
+      <div class="pin"></div>
+      <img src="assets/photo-1.jpeg" alt="Jagan at the temple, looking into the distance">
+      <div class="polaroid-cap">that golden evening</div>
+    </div>
+    <div class="polaroid reveal">
+      <div class="pin"></div>
+      <img src="assets/photo-2.jpeg" alt="Jagan sitting on the temple wall">
+      <div class="polaroid-cap">just being himself</div>
+    </div>
+    <div class="polaroid reveal">
+      <div class="pin"></div>
+      <img src="assets/photo-3.jpeg" alt="Jagan facing the temple gopuram">
+      <div class="polaroid-cap">facing something bigger</div>
+    </div>
+  </div>
+</div>
+
+<section class="timeline-section">
+  <h2 class="timeline-title display reveal">Little Moments, Big Memory</h2>
+  <div class="timeline">
+    <div class="t-item reveal">
+      <div class="t-year">Where it started</div>
+      <div class="t-title">Two strangers, one street</div>
+      <div class="t-desc">Neither of us remembers exactly how it began — only that somehow, we never stopped showing up for each other after.</div>
+    </div>
+    <div class="t-item reveal">
+      <div class="t-year">The everyday stuff</div>
+      <div class="t-title">A thousand small days</div>
+      <div class="t-desc">Nothing dramatic — just years of being around for the ordinary moments, which somehow became the ones that mattered most.</div>
+    </div>
+    <div class="t-item reveal">
+      <div class="t-year">That golden evening</div>
+      <div class="t-title">The temple, the light, the photos</div>
+      <div class="t-desc">Sitting on that old stone wall as the sun dropped behind the gopuram — one of those days you don't plan to remember, but somehow always will.</div>
+    </div>
+    <div class="t-item reveal">
+      <div class="t-year">Right now</div>
+      <div class="t-title">Still here, still us</div>
+      <div class="t-desc">Different days, same two people who'd still pick each other every single time.</div>
+    </div>
+  </div>
+</section>
+
+<div class="nav-area">
+  <a href="wishes.html" data-transition class="btn btn-ghost">← Birthday Wishes</a>
+  <a href="journey.html" data-transition class="btn btn-ghost">Friendship Journey →</a>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-names display gold-text">Jagan ✦ Forever Brothers</div>
+  <div class="footer-tag">Made with <span class="footer-heart">❤</span> for my best friend</div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

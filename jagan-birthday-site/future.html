@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Future Goals • Jagan</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .page-hero{
+    padding:7rem 1.5rem 2rem;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .page-title{ font-size:clamp(2.3rem,6vw,3.6rem); margin-bottom:0.6rem; }
+  .page-sub{ color:var(--cream); opacity:0.65; max-width:520px; margin:0 auto; font-size:1.02rem; }
+
+  .stars{
+    position:absolute; inset:0;
+    z-index:0;
+    background-image:
+      radial-gradient(2px 2px at 10% 20%, rgba(244,228,188,0.5), transparent),
+      radial-gradient(2px 2px at 80% 15%, rgba(244,228,188,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 30% 60%, rgba(244,228,188,0.4), transparent),
+      radial-gradient(2px 2px at 65% 45%, rgba(244,228,188,0.5), transparent),
+      radial-gradient(1.5px 1.5px at 90% 70%, rgba(244,228,188,0.3), transparent),
+      radial-gradient(1.5px 1.5px at 50% 85%, rgba(244,228,188,0.4), transparent);
+  }
+
+  .rocket-stage{
+    position:relative;
+    width:90px;
+    height:160px;
+    margin:3rem auto 1rem;
+    z-index:1;
+    animation:rocketFloat 4s ease-in-out infinite;
+  }
+  @keyframes rocketFloat{
+    0%,100%{ transform:translateY(0) rotate(0deg); }
+    50%{ transform:translateY(-16px) rotate(2deg); }
+  }
+  .rocket-stage svg{ width:100%; height:100%; filter:drop-shadow(0 20px 30px rgba(212,175,55,0.35)); }
+  .rocket-flame{
+    position:absolute;
+    bottom:-20px; left:50%;
+    width:24px; height:40px;
+    margin-left:-12px;
+    background:linear-gradient(180deg, var(--gold-bright), var(--rose-ember), transparent);
+    border-radius:0 0 50% 50%;
+    animation:flameFlicker 0.3s ease-in-out infinite alternate;
+    filter:blur(2px);
+  }
+  @keyframes flameFlicker{ from{ transform:scaleY(1) scaleX(1); } to{ transform:scaleY(1.2) scaleX(0.85); } }
+
+  .goals-section{ padding:3rem 1.5rem 6rem; }
+  .goals-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:1.4rem;
+    max-width:780px;
+    margin:0 auto;
+  }
+  @media (max-width:600px){
+    .goals-grid{ grid-template-columns:1fr; }
+  }
+  .goal-card{
+    background:linear-gradient(160deg, rgba(255,255,255,0.05), rgba(212,175,55,0.03));
+    border:1px solid rgba(212,175,55,0.25);
+    border-radius:var(--radius-md);
+    padding:1.8rem 1.6rem;
+    text-align:left;
+    transition:transform 0.4s var(--ease), border-color 0.4s var(--ease);
+  }
+  .goal-card:hover{ transform:translateY(-6px); border-color:rgba(212,175,55,0.55); }
+  .goal-icon{ font-size:1.6rem; margin-bottom:0.8rem; display:block; }
+  .goal-title{
+    font-family:'Playfair Display',serif;
+    font-size:1.15rem;
+    color:var(--gold-bright);
+    margin-bottom:0.5rem;
+  }
+  .goal-desc{
+    font-size:0.92rem;
+    color:var(--cream);
+    opacity:0.65;
+    line-height:1.55;
+  }
+
+  .closing-section{
+    padding:5rem 1.5rem 6rem;
+    text-align:center;
+  }
+  .closing-card{
+    max-width:640px;
+    margin:0 auto;
+    background:linear-gradient(160deg, rgba(212,175,55,0.1), rgba(255,255,255,0.03));
+    border:1px solid rgba(212,175,55,0.3);
+    border-radius:var(--radius-lg);
+    padding:clamp(2rem,5vw,3rem);
+  }
+  .closing-card p{
+    font-size:1.1rem;
+    line-height:1.85;
+    color:var(--cream);
+  }
+  .closing-sign{
+    margin-top:1.5rem;
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    color:var(--gold-bright);
+    font-size:1.15rem;
+  }
+
+  .nav-area{ display:flex; justify-content:center; gap:1rem; margin-top:1rem; flex-wrap:wrap; padding-bottom:1rem;}
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<canvas id="fxCanvas"></canvas>
+
+<nav class="site-nav">
+  <a href="index.html" data-transition class="back-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18L9 12L15 6"/></svg>
+    Home
+  </a>
+  <span class="nav-brand">Future Goals</span>
+</nav>
+
+<section class="page-hero">
+  <div class="stars"></div>
+  <div class="section-eyebrow"><span class="line"></span> Card Six <span class="line"></span></div>
+  <h1 class="page-title display gold-text">What's Ahead For You</h1>
+  <p class="page-sub">Everything I hope this next year brings — and everything I already believe about where you're headed.</p>
+
+  <div class="rocket-stage">
+    <div class="rocket-flame"></div>
+    <svg viewBox="0 0 90 160" fill="none">
+      <path d="M45 4C58 24 62 56 56 86L34 86C28 56 32 24 45 4Z" fill="#d4af37"/>
+      <circle cx="45" cy="36" r="8" fill="#1a1108"/>
+      <path d="M34 86L18 116L32 106Z" fill="#c9622e"/>
+      <path d="M56 86L72 116L58 106Z" fill="#c9622e"/>
+      <path d="M34 100L45 130L56 100Z" fill="#f4e4bc"/>
+      <rect x="40" y="50" width="10" height="6" rx="2" fill="#f4e4bc" opacity="0.6"/>
+    </svg>
+  </div>
+</section>
+
+<section class="goals-section">
+  <div class="goals-grid">
+    <div class="goal-card reveal">
+      <span class="goal-icon">🌅</span>
+      <div class="goal-title">Peace you don't have to chase</div>
+      <div class="goal-desc">A year where calm comes easier, and you don't have to fight so hard for the good days.</div>
+    </div>
+    <div class="goal-card reveal">
+      <span class="goal-icon">💪</span>
+      <div class="goal-title">Recognition you've earned</div>
+      <div class="goal-desc">May the work you put in quietly finally get seen — by the right people, at the right time.</div>
+    </div>
+    <div class="goal-card reveal">
+      <span class="goal-icon">🤝</span>
+      <div class="goal-title">People who match your loyalty</div>
+      <div class="goal-desc">You give so much to the people around you — this year, may it come back to you in equal measure.</div>
+    </div>
+    <div class="goal-card reveal">
+      <span class="goal-icon">🚀</span>
+      <div class="goal-title">The courage for your next leap</div>
+      <div class="goal-desc">Whatever big thing you've been circling — this is the year you finally jump. I'll be right there.</div>
+    </div>
+  </div>
+</section>
+
+<section class="closing-section">
+  <div class="closing-card reveal">
+    <p>I don't know everything life has planned for you, Jagan — but I know who you are at your core: someone steady, someone real, someone worth knowing. That doesn't change no matter what road you take.</p>
+    <p style="margin-top:1rem;">So here's to the version of you that's still becoming. I'm not going anywhere. Let's find out what's next, together.</p>
+    <p class="closing-sign">— Your brother, today and every year after.</p>
+  </div>
+</section>
+
+<div class="nav-area">
+  <a href="surprise.html" data-transition class="btn btn-ghost">← Birthday Surprise</a>
+  <a href="index.html" data-transition class="btn btn-gold">Back to Home ✦</a>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-names display gold-text">Jagan ✦ Forever Brothers</div>
+  <div class="footer-tag">Made with <span class="footer-heart">❤</span> for my best friend</div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

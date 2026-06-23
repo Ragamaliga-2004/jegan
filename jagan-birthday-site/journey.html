@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friendship Journey • Jagan</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .page-hero{
+    padding:7rem 1.5rem 2rem;
+    text-align:center;
+  }
+  .page-title{ font-size:clamp(2.3rem,6vw,3.6rem); margin-bottom:0.6rem; }
+  .page-sub{ color:var(--cream); opacity:0.65; max-width:520px; margin:0 auto; font-size:1.02rem; }
+
+  .journey-track{
+    position:relative;
+    max-width:780px;
+    margin:4rem auto 0;
+    padding:0 1.5rem 5rem;
+  }
+  .track-line{
+    position:absolute;
+    left:50%;
+    top:0; bottom:60px;
+    width:3px;
+    margin-left:-1.5px;
+    background:repeating-linear-gradient(180deg, var(--gold) 0, var(--gold) 10px, transparent 10px, transparent 20px);
+    opacity:0.5;
+  }
+  @media (max-width:640px){
+    .track-line{ left:28px; }
+  }
+
+  .stop{
+    position:relative;
+    display:flex;
+    align-items:center;
+    margin-bottom:4.5rem;
+    width:100%;
+  }
+  .stop:last-child{ margin-bottom:0; }
+  .stop:nth-child(odd){ justify-content:flex-start; }
+  .stop:nth-child(even){ justify-content:flex-end; }
+  .stop-card{
+    width:45%;
+    background:linear-gradient(160deg, rgba(255,255,255,0.05), rgba(212,175,55,0.03));
+    border:1px solid rgba(212,175,55,0.25);
+    border-radius:var(--radius-md);
+    padding:1.5rem 1.5rem;
+    text-align:left;
+    position:relative;
+  }
+  .stop-marker{
+    position:absolute;
+    left:50%; top:50%;
+    width:40px; height:40px;
+    margin-left:-20px; margin-top:-20px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 60%, var(--gold-deep));
+    box-shadow:0 0 0 6px var(--void), 0 0 24px rgba(212,175,55,0.5);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Playfair Display',serif;
+    font-weight:800;
+    color:var(--ink);
+    font-size:1.1rem;
+    z-index:2;
+  }
+  @media (max-width:640px){
+    .journey-track{ padding-left:0; }
+    .stop{ justify-content:flex-start !important; padding-left:64px; }
+    .stop-card{ width:100%; }
+    .stop-marker{ left:28px; margin-left:-20px; }
+  }
+
+  .stop-tag{
+    font-family:'Outfit',sans-serif;
+    font-size:0.68rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:0.4rem;
+  }
+  .stop-title{
+    font-family:'Playfair Display',serif;
+    font-size:1.3rem;
+    color:var(--cream);
+    margin-bottom:0.5rem;
+  }
+  .stop-desc{
+    font-size:0.95rem;
+    color:var(--cream);
+    opacity:0.65;
+    line-height:1.6;
+  }
+
+  .train-icon{
+    margin:0 auto 1rem;
+    width:70px;
+  }
+
+  .nav-area{ display:flex; justify-content:center; gap:1rem; margin-top:1rem; flex-wrap:wrap; padding-bottom:3rem;}
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<canvas id="fxCanvas"></canvas>
+
+<nav class="site-nav">
+  <a href="index.html" data-transition class="back-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18L9 12L15 6"/></svg>
+    Home
+  </a>
+  <span class="nav-brand">Friendship Journey</span>
+</nav>
+
+<section class="page-hero">
+  <div class="section-eyebrow"><span class="line"></span> Card Three <span class="line"></span></div>
+  <svg class="train-icon" viewBox="0 0 70 50" fill="none">
+    <rect x="6" y="18" width="30" height="18" rx="4" fill="#d4af37"/>
+    <rect x="38" y="12" width="24" height="24" rx="4" fill="#c9622e"/>
+    <circle cx="16" cy="40" r="6" fill="#1f1812" stroke="#f4e4bc" stroke-width="2"/>
+    <circle cx="32" cy="40" r="6" fill="#1f1812" stroke="#f4e4bc" stroke-width="2"/>
+    <circle cx="50" cy="40" r="6" fill="#1f1812" stroke="#f4e4bc" stroke-width="2"/>
+    <rect x="10" y="6" width="10" height="14" fill="#f4e4bc"/>
+  </svg>
+  <h1 class="page-title display gold-text">The Friendship Line</h1>
+  <p class="page-sub">Every stop on this track is a chapter we built side by side.</p>
+</section>
+
+<div class="journey-track">
+  <div class="track-line"></div>
+
+  <div class="stop">
+    <div class="stop-card reveal">
+      <div class="stop-tag">Station 01</div>
+      <div class="stop-title">Where the track began</div>
+      <div class="stop-desc">No grand story — just two people who somehow ended up on the same path and never got off.</div>
+    </div>
+    <div class="stop-marker">1</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-card reveal">
+      <div class="stop-tag">Station 02</div>
+      <div class="stop-title">Learning each other</div>
+      <div class="stop-desc">The years of figuring out each other's moods, jokes, and silences — until it stopped feeling like effort.</div>
+    </div>
+    <div class="stop-marker">2</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-card reveal">
+      <div class="stop-tag">Station 03</div>
+      <div class="stop-title">Showing up, every time</div>
+      <div class="stop-desc">The calls answered at odd hours, the plans changed without question — proof that this was never one-sided.</div>
+    </div>
+    <div class="stop-marker">3</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-card reveal">
+      <div class="stop-tag">Station 04</div>
+      <div class="stop-title">Becoming family</div>
+      <div class="stop-desc">Somewhere along the way, "friend" stopped being the right word. You became brother — no version of my life makes sense without you in it.</div>
+    </div>
+    <div class="stop-marker">4</div>
+  </div>
+
+  <div class="stop">
+    <div class="stop-card reveal">
+      <div class="stop-tag">Next Station</div>
+      <div class="stop-title">Wherever this track goes next</div>
+      <div class="stop-desc">I don't know what's ahead, but I know exactly who I want sitting beside me for it. Onward, machi.</div>
+    </div>
+    <div class="stop-marker">5</div>
+  </div>
+
+</div>
+
+<div class="nav-area">
+  <a href="memories.html" data-transition class="btn btn-ghost">← Fun Memories</a>
+  <a href="gallery.html" data-transition class="btn btn-ghost">Photo Gallery →</a>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-names display gold-text">Jagan ✦ Forever Brothers</div>
+  <div class="footer-tag">Made with <span class="footer-heart">❤</span> for my best friend</div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
